@@ -3,7 +3,6 @@ import mongoose from 'mongoose';
 import slugify from 'slugify';
 import { ICategory } from '../../types/category-types';
 import Category from './category.model';
-import { uploadImageToCloudinary } from '../../cloudinay-config';
 
 function formatCagtegories(categories: ICategory[], parentId?: string) {
   const formattedCategories: ICategory[] = [];
@@ -19,6 +18,7 @@ function formatCagtegories(categories: ICategory[], parentId?: string) {
       name: cat.name,
       slug: cat.slug,
       parentId: cat.parentId,
+      imageUrl: cat.imageUrl || "",
       subCategories: formatCagtegories(categories, cat._id.toString())
     })
   }
@@ -27,19 +27,11 @@ function formatCagtegories(categories: ICategory[], parentId?: string) {
 
 export const createCategory = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    let imageUrl = "";
-    if (req.file) {
-      const response = await uploadImageToCloudinary(req.file, 'categories');
-      if (response) {
-        imageUrl = response.secure_url;
-      }
-    }
-
     const categoryData = {
       name: req.body.name,
       slug: slugify(req.body.name),
       parentId: "",
-      categoryImage: imageUrl
+      imageUrl: req.body.imageUrl ? req.body.imageUrl : ""
     }
 
     if (req.body.parentId) {
@@ -81,6 +73,7 @@ export const updateCategory = async (req: Request, res: Response, next: NextFunc
     const updatedCategoryData = {
       name: req.body.name,
       slug: slugify(req.body.name),
+      imageUrl: req.body.imageUrl ? req.body.imageUrl : "",
       parentId: ""
     }
     if (req.body.parentId) {

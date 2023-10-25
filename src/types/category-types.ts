@@ -3,5 +3,6 @@ export interface ICategory {
   name: string;
   slug: string;
   parentId: string;
+  imageUrl?: string;
   subCategories?: ICategory[]
 }
