@@ -1,3 +1,4 @@
+import { ICategory } from "./category-types";
 import { IUser } from "./user-types";
 
 export enum ProductStatus {
@@ -13,6 +14,7 @@ export interface IProduct {
   maxRetailPrice: number;
   sellingPrice: number;
   quantity: number;
+  category: ICategory;
   status: ProductStatus;
   createdBy: IUser;
   productImages: IProductImage[];

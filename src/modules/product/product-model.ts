@@ -39,7 +39,7 @@ const productSchema = new Schema({
   category: { type: Schema.Types.ObjectId, ref: "Category", required: true },
   createdBy: { type: Schema.Types.ObjectId, ref: "User", required: true },
   productImages: [
-    { imgUrl: { type: String } }
+    { type: String }
   ],
   reviews: [
     {

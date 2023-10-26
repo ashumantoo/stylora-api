@@ -7,20 +7,7 @@ import Product from "./product-model";
 
 export const addProduct = async (req: IRequest, res: Response, next: NextFunction) => {
   try {
-    const { name, description, maxRetailPrice, sellingPrice, category, quantity, status } = req.body;
-    const productImages = [];
-    if (req.files && req.files.length) {
-      let files: any = req.files;
-      for (let index = 0; index < files.length; index++) {
-        const file = files[index];
-        const response = await uploadImageToCloudinary(file, 'products');
-        if (response) {
-          productImages.push({
-            imgUrl: response.secure_url
-          })
-        }
-      }
-    }
+    const { name, description, maxRetailPrice, sellingPrice, category, quantity, status, productImages } = req.body;
     const newProduct = {
       name,
       slug: slugify(name),
@@ -42,7 +29,7 @@ export const addProduct = async (req: IRequest, res: Response, next: NextFunctio
 
 export const getProducts = async (req: IRequest, res: Response, next: NextFunction) => {
   try {
-    const products = await Product.find();
+    const products = await Product.find().populate('category').exec();
     res.status(200).json({ success: true, products });
   } catch (error) {
     next(error);
