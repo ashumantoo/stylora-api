@@ -1,3 +1,4 @@
+import { string } from "joi";
 import { Schema, model } from "mongoose";
 
 const categorySchema = new Schema({
@@ -10,6 +11,9 @@ const categorySchema = new Schema({
     type: String,
     required: true,
     unique: true
+  },
+  type: {
+    type: String
   },
   parentId: {
     type: String

@@ -19,6 +19,7 @@ function formatCagtegories(categories: ICategory[], parentId?: string) {
       slug: cat.slug,
       parentId: cat.parentId,
       imageUrl: cat.imageUrl || "",
+      type: cat.type || "",
       subCategories: formatCagtegories(categories, cat._id.toString())
     })
   }
@@ -30,6 +31,7 @@ export const createCategory = async (req: Request, res: Response, next: NextFunc
     const categoryData = {
       name: req.body.name,
       slug: slugify(req.body.name),
+      type: req.body.type || "",
       parentId: "",
       imageUrl: req.body.imageUrl ? req.body.imageUrl : ""
     }
@@ -73,6 +75,7 @@ export const updateCategory = async (req: Request, res: Response, next: NextFunc
     const updatedCategoryData = {
       name: req.body.name,
       slug: slugify(req.body.name),
+      type: req.body.type || "",
       imageUrl: req.body.imageUrl ? req.body.imageUrl : "",
       parentId: ""
     }

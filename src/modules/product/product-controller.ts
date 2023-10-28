@@ -4,6 +4,7 @@ import slugify from "slugify";
 import { uploadImageToCloudinary } from "../../cloudinay-config";
 import { IRequest } from "../../types/common-types";
 import Product from "./product-model";
+import Category from "../category/category.model";
 
 export const addProduct = async (req: IRequest, res: Response, next: NextFunction) => {
   try {
@@ -44,6 +45,30 @@ export const getProduct = async (req: IRequest, res: Response, next: NextFunctio
     }
     const product = await Product.findById(productId);
     res.status(200).json({ success: true, product });
+  } catch (error) {
+    next(error);
+  }
+}
+
+export const getProductsBySlug = async (req: IRequest, res: Response, next: NextFunction) => {
+  try {
+    const slug = req.params.slug;
+    const category = await Category.findOne({ slug: slug }).select("_id");
+    if (!category) {
+      res.status(404).json({ success: false, message: "Category not found" });
+    }
+    const products = await Product.find({ category: category?._id });
+    res.status(200).json({
+      success: true,
+      products,
+      productsByPrice: {
+        under5k: products.filter(product => product.sellingPrice <= 5000),
+        under10k: products.filter(product => product.sellingPrice > 5000 && product.sellingPrice <= 10000),
+        under15k: products.filter(product => product.sellingPrice > 10000 && product.sellingPrice <= 15000),
+        under20k: products.filter(product => product.sellingPrice > 15000 && product.sellingPrice <= 20000),
+        under30k: products.filter(product => product.sellingPrice > 20000 && product.sellingPrice <= 30000),
+      }
+    });
   } catch (error) {
     next(error);
   }

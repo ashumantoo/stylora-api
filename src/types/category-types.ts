@@ -4,5 +4,6 @@ export interface ICategory {
   slug: string;
   parentId: string;
   imageUrl?: string;
+  type?: string;
   subCategories?: ICategory[]
 }

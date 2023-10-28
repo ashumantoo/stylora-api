@@ -14,4 +14,6 @@ categoryRoute.get('/category/:categoryId', requiresSignin, getCategory);
 categoryRoute.put('/category/:categoryId', requiresSignin, isAdmin, updateCategory);
 categoryRoute.delete('/category/:categoryId', requiresSignin, isAdmin, deleteCategory);
 
+categoryRoute.get('/consumer/category', getCategories);
+
 export default categoryRoute;
