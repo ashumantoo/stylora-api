@@ -7,6 +7,7 @@ import categoryRoute from './src/modules/category/category-route';
 import productRoutes from './src/modules/product/product-route';
 import cartRoutes from './src/modules/cart/cart-routes';
 import cors from 'cors'
+import categoryPageRoute from './src/modules/page/page-route';
 
 const app = express();
 
@@ -33,6 +34,7 @@ app.use(cors())
 app.use("/api", userAuthRouter);
 app.use("/api", adminAuthRoute);
 app.use("/api", categoryRoute);
+app.use('/api', categoryPageRoute);
 app.use('/api', productRoutes);
 app.use('/api', cartRoutes);
 

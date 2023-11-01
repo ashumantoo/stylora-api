@@ -1,12 +1,8 @@
 import express from 'express';
 import { isAdmin, requiresSignin } from '../../middleware/auth-middleware';
 import { createCategory, deleteCategory, getCategories, getCategory, updateCategory } from './category-controller';
-import multer from 'multer';
-const categoryRoute = express.Router();
 
-const upload = multer({
-  storage: multer.memoryStorage()
-});
+const categoryRoute = express.Router();
 
 categoryRoute.post('/category', requiresSignin, isAdmin, createCategory);
 categoryRoute.get('/category', requiresSignin, getCategories);
