@@ -1,6 +1,6 @@
 import express from 'express';
 import { isAdmin, requiresSignin } from '../../middleware/auth-middleware';
-import { createCategoryPage, deleteCategoryPage, getCategoryPage, getCategoryPages, updateCategoryPage } from './page-controller';
+import { createCategoryPage, deleteCategoryPage, getCategoryPage, getCategoryPages, getConsumerCategoryPage, updateCategoryPage } from './page-controller';
 
 const categoryPageRoute = express.Router();
 
@@ -9,6 +9,8 @@ categoryPageRoute.get('/category-page', requiresSignin, isAdmin, getCategoryPage
 categoryPageRoute.get('/category-page/:pageId', requiresSignin, isAdmin, getCategoryPage);
 categoryPageRoute.put('/category-page/:pageId', requiresSignin, isAdmin, updateCategoryPage);
 categoryPageRoute.delete('/category-page/:pageId', requiresSignin, isAdmin, deleteCategoryPage);
+
+categoryPageRoute.get('/consumer/category-page/:category/:type', getConsumerCategoryPage);
 
 
 export default categoryPageRoute;

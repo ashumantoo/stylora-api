@@ -131,3 +131,18 @@ export const deleteCategoryPage = async (req: Request, res: Response, next: Next
     next(error);
   }
 }
+
+export const getConsumerCategoryPage = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { category, type } = req.params;
+    if (type === 'page') {
+      const categoryPage = await Page.findOne({ category });
+      if (!categoryPage) {
+        res.status(404).json({ success: true, message: "Category page not found" });
+      }
+      res.status(200).json({ success: true, categoryPage });
+    }
+  } catch (error) {
+    next(error);
+  }
+}
