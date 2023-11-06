@@ -3,6 +3,7 @@ import User from './user-model';
 import JWT from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import { json } from 'body-parser';
+import { Roles } from '../../types/user-types';
 
 export const signup = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -47,6 +48,12 @@ export const signin = async (req: Request, res: Response) => {
         message: "Incorrect password"
       })
     }
+    if (user && user.role !== Roles.USER) {
+      return res.status(401).json({
+        success: false,
+        message: "Invalid user role"
+      });
+    }
     //since we have a valid user with email and password generate token here
     const token = JWT.sign({ _id: user._id, role: user.role }, process.env.JWT_SECRET || "supersecret", { expiresIn: "1d" });
     const { _id, firstName, lastName, email, role, fullName } = user;
@@ -55,7 +62,6 @@ export const signin = async (req: Request, res: Response) => {
       user: { _id, firstName, lastName, email, role, fullName }
     });
   } catch (error: any) {
-    console.log("errorrr-------", error);
     return res.status(400).json({
       success: false,
       message: error.message

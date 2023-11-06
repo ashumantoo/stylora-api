@@ -10,6 +10,8 @@ productRoutes.get('/product/:productId', requiresSignin, getProduct);
 productRoutes.put('/product/:productId', requiresSignin, isAdmin, updateProduct);
 productRoutes.delete('/product/:productId', requiresSignin, isAdmin, deleteProduct);
 
-productRoutes.get('/consumer/product/:slug', getProductsBySlug);
+productRoutes.get('/consumer/products/:slug', getProductsBySlug);
+productRoutes.get('/consumer/product/:productId', getProduct);
+
 
 export default productRoutes;
