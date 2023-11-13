@@ -1,44 +1,78 @@
 import { NextFunction, Response } from "express";
 import { IRequest } from "../../types/common-types";
 import Cart from './cart-model';
+import { ICart, ICartItem, ICartItemInput } from "../../types/cart-types";
 
 export const addProductToCart = async (req: IRequest, res: Response, next: NextFunction) => {
   try {
-    const existingCart = await Cart.findOne({ user: req.user?._id });
-    if (existingCart) {
-      //update the existing cart by increaing the quantity or add new item to the cart
-      const _productItem = req.body.cartItem.product;
-      const existingItem = existingCart.cartItems.find(c => c.product.toString() === _productItem);
-      if (existingItem) {
-        //update the quantity
-        await Cart.findOneAndUpdate({ user: req.user?._id, "cartItems.product": _productItem }, {
-          "$set": {
-            "cartItems.$": {
-              ...req.body.cartItem,
-              quantity: existingItem.quantity + req.body.cartItem.quantity
+    const cart = await Cart.findOne({ user: req.user?._id });
+    if (cart) {
+      //cart already exist update the cart by increasing the quantity
+      let promisesArr: any[] = [];
+      req.body.cartItems.forEach(async (cartItem: ICartItemInput) => {
+        const product = cartItem.product;
+        const item = cart.cartItems.find((item) => item.product.toString() === product);
+        let condition: object, update: object;
+        if (item) {
+          cartItem.quantity = item.quantity + cartItem.quantity;
+          condition = { 'user': req.user?._id, 'cartItems.product': product };
+          update = {
+            '$set': {
+              'cartItems.$': cartItem
             }
           }
-        }).exec();
-        // res.status(200).json({ sucess: true, cart: _updatedCart })
-      } else {
-        //Insert the new item to the cart
-        await Cart.findOneAndUpdate({ user: req.user?._id }, {
-          "$push": {
-            "cartItems": req.body.cartItem
+        } else {
+          condition = { 'user': req.user?._id };
+          update = {
+            '$push': {
+              'cartItems': cartItem
+            }
           }
-        }).exec();
-        // res.status(201).json({ sucess: true, cart: _updatedCart })
+        }
+        promisesArr.push(await Cart.findOneAndUpdate(condition, update, { upsert: true }))
+      });
+      const result = await Promise.all(promisesArr);
+      if (result) {
+        res.status(200).json({ success: true, result });
       }
-      const updatedCart = await Cart.findOne({ user: req.user?._id });
-      res.status(201).json({ sucess: true, cart: updatedCart });
     } else {
-      //If no existingcart then create new cart for the user
-      const newCart = await Cart.create({
+      //If cart doesn't exist then create new one
+      const newCartData = {
         user: req.user?._id,
-        cartItems: [req.body.cartItem]
-      })
-      res.status(201).json({ sucess: true, cart: newCart });
+        cartItems: req.body.cartItems
+      }
+
+      const cart = await Cart.create(newCartData);
+      if (cart) {
+        res.status(201).json({ success: true, cart });
+      }
     }
+  } catch (error) {
+    next(error);
+  }
+}
+
+export const getUserCartItems = async (req: IRequest, res: Response, next: NextFunction) => {
+  try {
+    const cart = await Cart.findOne({ user: req.user?._id })
+      .populate('cartItems.product', '_id name sellingPrice maxRetailPrice productImages');
+    if (!cart) {
+      res.status(400).json({ success: false, message: "cart not found" });
+    }
+    const formatedCartItems: any[] = [];
+    cart?.cartItems.forEach((item: any) => {
+      if (item && item.product) {
+        formatedCartItems.push({
+          _id: item.product.id,
+          name: item.product.name,
+          image: item.product.productImages && item.product.productImages.length ? item.product.productImages[0] : "",
+          sellingPrice: item.product.sellingPrice,
+          maxRetailPrice: item.product.sellingPrice,
+          quantity: item.quantity,
+        })
+      }
+    })
+    return res.status(200).json({ success: true, cartItems: formatedCartItems });
   } catch (error) {
     next(error);
   }

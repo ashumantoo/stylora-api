@@ -1,8 +1,9 @@
 import express from 'express';
-import { isAdmin, isUser, requiresSignin } from '../../middleware/auth-middleware';
-import { addProductToCart } from './cart-controller';
+import { isUser, requiresSignin } from '../../middleware/auth-middleware';
+import { addProductToCart, getUserCartItems } from './cart-controller';
 const cartRoutes = express.Router();
 
-cartRoutes.post('/cart/add-to-cart', requiresSignin, isUser, addProductToCart);
+cartRoutes.post('/consumer/cart/addtocart', requiresSignin, isUser, addProductToCart);
+cartRoutes.get('/consumer/cart/getcartitems', requiresSignin, isUser, getUserCartItems)
 
 export default cartRoutes;
