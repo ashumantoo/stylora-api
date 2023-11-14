@@ -1,13 +1,15 @@
-import express, { ErrorRequestHandler, NextFunction, Request, Response } from 'express';
+import express, { NextFunction, Request, Response } from 'express';
 import env from 'dotenv';
 import mongoose from 'mongoose';
+import cors from 'cors'
+
 import userAuthRouter from './src/modules/auth/user-auth-route';
 import adminAuthRoute from './src/modules/auth/admin-auth-route';
 import categoryRoute from './src/modules/category/category-route';
 import productRoutes from './src/modules/product/product-route';
 import cartRoutes from './src/modules/cart/cart-routes';
-import cors from 'cors'
 import categoryPageRoute from './src/modules/page/page-route';
+import userAddressRoutes from './src/modules/address/address-routes';
 
 const app = express();
 
@@ -37,6 +39,7 @@ app.use("/api", categoryRoute);
 app.use('/api', categoryPageRoute);
 app.use('/api', productRoutes);
 app.use('/api', cartRoutes);
+app.use('/api', userAddressRoutes)
 
 //error handler at the app level
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
