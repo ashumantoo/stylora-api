@@ -4,6 +4,48 @@ import UserAddress from './address-model';
 import { Types } from "mongoose";
 import { IUserAddress } from "../../types/address-types";
 
+//Doing Add and update of address with the single api 
+export const addAddress = async (req: IRequest, res: Response, next: NextFunction) => {
+  try {
+    if (req.body.address) {
+      if (req.body.address._id) {
+        //update the existing address
+        const updatedAddress = await UserAddress.findOneAndUpdate(
+          { user: req.user?._id, 'addresses._id': req.body.address._id },
+          {
+            $set: {
+              'addresses.$': req.body.address
+            }
+          }
+        )
+        if (updatedAddress) {
+          return res.status(200).json({ success: true, updatedAddress });
+        } else {
+          return res.status(500).json({ success: false, message: "Something went wrong" });
+        }
+      } else {
+        //push the new address to the address array
+        const updatedAddress = await UserAddress.findOneAndUpdate(
+          { user: req.user?._id },
+          {
+            $push: {
+              addresses: req.body.address
+            }
+          }
+        )
+        if (updatedAddress) {
+          return res.status(200).json({ success: true, updatedAddress });
+        } else {
+          return res.status(500).json({ success: false, message: "Something went wrong" });
+        }
+      }
+    }
+    return res.status(400).json({ success: false, message: "Address not provided" })
+  } catch (error) {
+    next(error);
+  }
+}
+
 export const createUserAddress = async (req: IRequest, res: Response, next: NextFunction) => {
   try {
     if (req.body.address) {

@@ -10,6 +10,7 @@ import productRoutes from './src/modules/product/product-route';
 import cartRoutes from './src/modules/cart/cart-routes';
 import categoryPageRoute from './src/modules/page/page-route';
 import userAddressRoutes from './src/modules/address/address-routes';
+import morgan from 'morgan';
 
 const app = express();
 
@@ -30,7 +31,9 @@ app.use(express.json());
 app.use(express.urlencoded({
   extended: true
 }));
-app.use(cors())
+app.use(cors());
+
+app.use(morgan('combined'));
 
 //Routes
 app.use("/api", userAuthRouter);
