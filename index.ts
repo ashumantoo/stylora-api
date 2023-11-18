@@ -11,6 +11,7 @@ import cartRoutes from './src/modules/cart/cart-routes';
 import categoryPageRoute from './src/modules/page/page-route';
 import userAddressRoutes from './src/modules/address/address-routes';
 import morgan from 'morgan';
+import orderRoutes from './src/modules/order/order-routes';
 
 const app = express();
 
@@ -42,7 +43,8 @@ app.use("/api", categoryRoute);
 app.use('/api', categoryPageRoute);
 app.use('/api', productRoutes);
 app.use('/api', cartRoutes);
-app.use('/api', userAddressRoutes)
+app.use('/api', userAddressRoutes);
+app.use('/api', orderRoutes);
 
 //error handler at the app level
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
