@@ -1,6 +1,6 @@
 import express from 'express';
 import { isAdmin, isUser, requiresSignin } from '../../middleware/auth-middleware';
-import { adminUpdateOrderStatus, createOrder, getOrder, getOrders } from './order-controller';
+import { adminUpdateOrderStatus, createOrder, getOrder, getOrders, getUserOrders } from './order-controller';
 
 const orderRoutes = express.Router();
 
@@ -10,7 +10,7 @@ orderRoutes.put('/order/:orderId', requiresSignin, isAdmin, adminUpdateOrderStat
 
 //customer routes
 orderRoutes.post('/consumer/order', requiresSignin, isUser, createOrder);
-orderRoutes.get('/consumer/order', requiresSignin, isUser, getOrders);
+orderRoutes.get('/consumer/order', requiresSignin, isUser, getUserOrders);
 orderRoutes.get('/consumer/order/:orderId', requiresSignin, isUser, getOrder);
 
 

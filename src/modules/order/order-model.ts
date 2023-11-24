@@ -15,6 +15,10 @@ const OrderSchema = new mongoose.Schema({
     type: Number,
     required: true
   },
+  referenceNumber: {
+    type: String,
+    require: true
+  },
   items: [
     {
       product: {

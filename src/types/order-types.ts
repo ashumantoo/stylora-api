@@ -6,6 +6,7 @@ export interface IOrderInput {
   user: string;
   address: string;
   totalAmount: number;
+  referenceNumber: string;
   items: IOrderItemInput[];
   paymentType: string;
   paymentStatus: string;
@@ -29,6 +30,7 @@ export interface IOrder {
   user: IUser;
   address: IUserAddress
   totalAmount: number;
+  referenceNumber:string;
   items: IOrderItem[];
   paymentType: string;
   paymentStatus: string;
