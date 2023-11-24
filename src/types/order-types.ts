@@ -7,6 +7,15 @@ export interface IOrderInput {
   address: string;
   totalAmount: number;
   items: IOrderItemInput[];
+  paymentType: string;
+  paymentStatus: string;
+  orderStatus: IOrderStatus[];
+}
+
+export interface IOrderStatus {
+  status: string;
+  date: string;
+  isCompleted: boolean;
 }
 
 export interface IOrderItemInput {
@@ -21,10 +30,20 @@ export interface IOrder {
   address: IUserAddress
   totalAmount: number;
   items: IOrderItem[];
+  paymentType: string;
+  paymentStatus: string;
+  orderStatus: IOrderStatus[];
 }
 
 export interface IOrderItem {
   product: IProduct;
   payableAmount: number;
   purchaseQuantity: number;
+}
+
+export enum OrderStatusEnum {
+  ORDERED = 'ORDERED',
+  PACKED = 'PACKED',
+  SHIPPED = 'SHIPPED',
+  DELIVERED = 'DELIVERED'
 }

@@ -33,7 +33,7 @@ export const addProductToCart = async (req: IRequest, res: Response, next: NextF
       });
       const result = await Promise.all(promisesArr);
       if (result) {
-        res.status(200).json({ success: true, result });
+        return res.status(200).json({ success: true, result });
       }
     } else {
       //If cart doesn't exist then create new one
@@ -44,7 +44,7 @@ export const addProductToCart = async (req: IRequest, res: Response, next: NextF
 
       const cart = await Cart.create(newCartData);
       if (cart) {
-        res.status(201).json({ success: true, cart });
+        return res.status(201).json({ success: true, cart });
       }
     }
   } catch (error) {
@@ -57,7 +57,7 @@ export const getUserCartItems = async (req: IRequest, res: Response, next: NextF
     const cart = await Cart.findOne({ user: req.user?._id })
       .populate('cartItems.product', '_id name sellingPrice maxRetailPrice productImages');
     if (!cart) {
-      res.status(400).json({ success: false, message: "cart not found" });
+      return res.status(400).json({ success: false, message: "cart not found" });
     }
     const formatedCartItems: any[] = [];
     cart?.cartItems.forEach((item: any) => {

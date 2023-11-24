@@ -53,22 +53,26 @@ export const getProduct = async (req: IRequest, res: Response, next: NextFunctio
 export const getProductsBySlug = async (req: IRequest, res: Response, next: NextFunction) => {
   try {
     const slug = req.params.slug;
-    const category = await Category.findOne({ slug: slug }).select("_id");
+    const category = await Category.findOne({ slug: slug }).select("_id type");
     if (!category) {
       res.status(404).json({ success: false, message: "Category not found" });
     }
     const products = await Product.find({ category: category?._id });
-    res.status(200).json({
-      success: true,
-      products,
-      productsByPrice: {
-        under5k: products.filter(product => product.sellingPrice <= 5000),
-        under10k: products.filter(product => product.sellingPrice > 5000 && product.sellingPrice <= 10000),
-        under15k: products.filter(product => product.sellingPrice > 10000 && product.sellingPrice <= 15000),
-        under20k: products.filter(product => product.sellingPrice > 15000 && product.sellingPrice <= 20000),
-        under30k: products.filter(product => product.sellingPrice > 20000 && product.sellingPrice <= 30000),
-      }
-    });
+    if (category?.type) {
+      return res.status(200).json({
+        success: true,
+        products,
+        productsByPrice: {
+          under5k: products.filter(product => product.sellingPrice <= 5000),
+          under10k: products.filter(product => product.sellingPrice > 5000 && product.sellingPrice <= 10000),
+          under15k: products.filter(product => product.sellingPrice > 10000 && product.sellingPrice <= 15000),
+          under20k: products.filter(product => product.sellingPrice > 15000 && product.sellingPrice <= 20000),
+          under30k: products.filter(product => product.sellingPrice > 20000 && product.sellingPrice <= 30000),
+        }
+      });
+    } else {
+      return res.status(200).json({ success: true, products });
+    }
   } catch (error) {
     next(error);
   }

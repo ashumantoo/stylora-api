@@ -32,10 +32,27 @@ const OrderSchema = new mongoose.Schema({
       }
     }
   ],
-  status: {
+  orderStatus: [
+    {
+      status: {
+        type: String,
+        enum: ['ORDERED', 'PACKED', 'SHIPPED', 'DELIVERED', 'CANCELLED'],
+        required: true,
+        default: 'ORDERED'
+      },
+      date: {
+        type: Date
+      },
+      isCompleted: {
+        type: Boolean,
+        default: false
+      }
+    }
+  ],
+  paymentType: {
     type: String,
-    enum: ['PENDING', 'CONFIRMED', 'CANCELLED', 'DISPATCHED', 'DELIVERED'],
-    required: true
+    enum: ['COD', 'CARD'],
+    default: 'COD'
   },
   paymentStatus: {
     type: String,
