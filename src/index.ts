@@ -3,17 +3,15 @@ import env from 'dotenv';
 import mongoose from 'mongoose';
 import cors from 'cors'
 
-import userAuthRouter from './src/modules/auth/user-auth-route';
-import adminAuthRoute from './src/modules/auth/admin-auth-route';
-import categoryRoute from './src/modules/category/category-route';
-import productRoutes from './src/modules/product/product-route';
-import cartRoutes from './src/modules/cart/cart-routes';
-import categoryPageRoute from './src/modules/page/page-route';
-import userAddressRoutes from './src/modules/address/address-routes';
+import userAuthRouter from './modules/auth/user-auth-route';
+import adminAuthRoute from './modules/auth/admin-auth-route';
+import categoryRoute from './modules/category/category-route';
+import productRoutes from './modules/product/product-route';
+import cartRoutes from './modules/cart/cart-routes';
+import categoryPageRoute from './modules/page/page-route';
+import userAddressRoutes from './modules/address/address-routes';
 import morgan from 'morgan';
-import orderRoutes from './src/modules/order/order-routes';
-
-import { customAlphabet } from 'nanoid';
+import orderRoutes from './modules/order/order-routes';
 
 const app = express();
 
