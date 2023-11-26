@@ -77,3 +77,29 @@ export const getUserCartItems = async (req: IRequest, res: Response, next: NextF
     next(error);
   }
 }
+
+export const removeCartItem = async (req: IRequest, res: Response, next: NextFunction) => {
+  try {
+    const productId = req.body.productId;
+    if (productId) {
+      const result = await Cart.updateOne(
+        { user: req.user?._id },
+        {
+          $pull: {
+            cartItems: {
+              product: productId
+            }
+          }
+        }
+      ).exec();
+      if (result) {
+        return res.status(200).json({ success: true, result });
+      }
+    } else {
+      return res.status(400).json({ success: false, message: "Invalid product id" });
+    }
+
+  } catch (error) {
+    next(error);
+  }
+}

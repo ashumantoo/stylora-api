@@ -24,8 +24,6 @@ env.config();
 mongoose.connect(
   `mongodb+srv://${process.env.MONGODB_USER}:${process.env.MONGODB_PASSWORD}@cluster0.1gkcp.mongodb.net/flipkart-clone?retryWrites=true&w=majority`
 ).then(() => {
-  const nanoid = customAlphabet('1234567890abcdef', 10);
-  console.log(nanoid(7).toUpperCase())
   console.log("Connected to database")
 })
   .catch((err: any) => {

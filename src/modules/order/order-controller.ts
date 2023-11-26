@@ -5,6 +5,7 @@ import { Types } from "mongoose";
 import Cart from "../cart/cart-model";
 import { IOrderInput, OrderStatusEnum } from "../../types/order-types";
 import { customAlphabet } from 'nanoid';
+import UserAddress from "../address/address-model";
 
 export const createOrder = async (req: IRequest, res: Response, next: NextFunction) => {
   try {
@@ -85,7 +86,15 @@ export const getOrder = async (req: IRequest, res: Response, next: NextFunction)
     if (!Types.ObjectId.isValid(orderId)) {
       throw new Error("Invalid order Id");
     }
-    const order = await Order.findOne({ _id: orderId }).populate('items.product', '_id name productImages');;
+    const order: any = await Order
+      .findOne({ _id: orderId })
+      .populate('items.product', '_id name productImages')
+      .lean();
+    const addresses = await UserAddress.findOne({ user: req.user?._id });
+    const matchedAddress = addresses?.addresses.find((add) => add?._id?.toString() === order?.address._id.toString());
+    if (matchedAddress && order && order.address) {
+      order.address = matchedAddress;
+    }
     if (order) {
       return res.status(200).json({ success: true, order });
     } else {
