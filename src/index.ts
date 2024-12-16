@@ -2,6 +2,7 @@ import express, { NextFunction, Request, Response } from 'express';
 import env from 'dotenv';
 import mongoose from 'mongoose';
 import cors from 'cors'
+import morgan from 'morgan';
 
 import userAuthRouter from './modules/auth/user-auth-route';
 import adminAuthRoute from './modules/auth/admin-auth-route';
@@ -10,7 +11,6 @@ import productRoutes from './modules/product/product-route';
 import cartRoutes from './modules/cart/cart-routes';
 import categoryPageRoute from './modules/page/page-route';
 import userAddressRoutes from './modules/address/address-routes';
-import morgan from 'morgan';
 import orderRoutes from './modules/order/order-routes';
 
 const app = express();
@@ -37,8 +37,8 @@ app.use(cors());
 app.use(morgan('combined'));
 
 //Routes
-app.use("/api", userAuthRouter);
-app.use("/api", adminAuthRoute);
+app.use("/api/user", userAuthRouter); //TODO:check api end point has been changed earlier it was /api/signin -> /sign/user/signin
+app.use("/api/admin", adminAuthRoute);
 app.use("/api", categoryRoute);
 app.use('/api', categoryPageRoute);
 app.use('/api', productRoutes);

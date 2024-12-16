@@ -13,17 +13,21 @@ export const signup = async (req: Request, res: Response, next: NextFunction) =>
     }
     const { firstName, lastName, email, password, mobile } = req.body;
     const hash_password = bcrypt.hash(password, 10);
-    const newUser = {
+
+    const newUser = new User({
       firstName,
       lastName,
       email,
       hash_password,
       mobile,
       role: "ADMIN"
-    }
+    });
 
-    await User.create(newUser);
-    return res.status(200).json({
+    await newUser.save();
+
+    return res.status(201).json({
+      success: true,
+      status: 201,
       message: "Admin user created successfully"
     })
   } catch (error) {
@@ -62,5 +66,20 @@ export const signin = async (req: Request, res: Response, next: NextFunction) =>
     });
   } catch (error: any) {
     next(error)
+  }
+}
+
+export const verifyOtp = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const user: any = await User.findOne({ email: req.body.email }).exec();
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        status: 404,
+        message: "Admin not found"
+      })
+    }
+  } catch (error) {
+    next(error);
   }
 }

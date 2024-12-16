@@ -1,5 +1,4 @@
 import mongoose from 'mongoose';
-import bcrypt from 'bcrypt';
 const { Schema } = mongoose;
 
 const userSchema = new Schema({
@@ -69,6 +68,32 @@ const userSchema = new Schema({
     type: String,
     enum: ['USER', 'ADMIN'],
     default: "USER"
+  },
+  lastLoginDate: {
+    type: Date,
+    default: null
+  },
+  status: {
+    type: String,
+    required: true,
+    enum: ['ACTIVE', 'INACTIVE'],
+    default: "ACTIVE"
+  },
+  refreshToken: {
+    type: String,
+    default: ""
+  },
+  isEmailVerified: {
+    type: Boolean,
+    default: false
+  },
+  otp: {
+    type: Number,
+    default: null
+  },
+  otpExpiry: {
+    type: Date,
+    default: null
   }
 }, { timestamps: true });
 

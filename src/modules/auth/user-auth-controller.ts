@@ -2,7 +2,6 @@ import { NextFunction, Request, Response } from 'express';
 import User from './user-model';
 import JWT from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
-import { json } from 'body-parser';
 import { Roles } from '../../types/user-types';
 
 export const signup = async (req: Request, res: Response, next: NextFunction) => {
